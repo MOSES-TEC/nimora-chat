@@ -10,6 +10,8 @@ import User from "./models/user.model.js";
 import { connectDB } from "./lib/db.js";
 import job from "./lib/cron.js";
 
+import clerkWebhook from "./webhooks/clerk.webhook.js";
+
 
 const app = express();
 
@@ -17,6 +19,9 @@ const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 const publicDir = path.join(process.cwd(), "public");
+
+// it's important that don't parse the webhook event data, it should be in the raw format
+app.use("/api/webhooks/clerk", express.raw({ type: "application/json" }), clerkWebhook);
 
 app.use(express.json());
 
